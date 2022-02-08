@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // document.querySelectorAll('.wrdCell').forEach(cell => {
     //     cell.trigger('focus');
     // });
+    document.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.target.focus();
+    });
 
     document.addEventListener('keyup', (e) => {
         let cell = document.querySelector('.wrdCell-Unlocked');
