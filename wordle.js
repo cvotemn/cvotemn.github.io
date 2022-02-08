@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //Start listening for keypresses
-    document.querySelectorAll('.wrdCell').forEach(cell => {
-        cell.trigger('focus');
-    });
+    // document.querySelectorAll('.wrdCell').forEach(cell => {
+    //     cell.trigger('focus');
+    // });
 
     document.addEventListener('keyup', (e) => {
         let cell = document.querySelector('.wrdCell-Unlocked');
