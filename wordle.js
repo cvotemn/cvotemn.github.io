@@ -33,8 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // document.querySelectorAll('.wrdCell').forEach(cell => {
     //     cell.trigger('focus');
     // });
-    document.addEventListener('touchstart', (e) => {
-        e.preventDefault();
+    wrdCell.addEventListener('touchstart', (e) => {
         e.target.focus();
     });
 
