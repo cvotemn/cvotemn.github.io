@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     //Get Possible Words
     fnReadWords();
-    openKeyBoard();
+   // openKeyBoard();
 
     //Reset Button
     const btnReset = document.querySelector('button.btnReset');
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //     cell.trigger('focus');
     // });
     wrdCell.addEventListener('touchstart', (e) => {
-        e.target.focus();
+        alert('touchstart');
     });
 
     document.addEventListener('keyup', (e) => {
@@ -175,11 +175,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    function openKeyBoard(){
-        document.getElementById("dummyInput").click();
-        setTimeout(function(){
-            document.getElementById("dummyInput").focus()},1)
-        return "keyboard open";
+    // function openKeyBoard(){
+    //     document.getElementById("dummyInput").click();
+    //     setTimeout(function(){
+    //         document.getElementById("dummyInput").focus()},1)
+    //     return "keyboard open";
     
-    }
+    // }
 });
