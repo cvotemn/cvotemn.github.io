@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //     cell.trigger('focus');
     // });
     document.addEventListener('touchstart', (e) => {
-        alert('touchstart');
+        e.target.focus();
     });
 
     document.addEventListener('keyup', (e) => {
