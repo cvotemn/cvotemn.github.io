@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //Start listening for keypresses
+    wrdCells.addEventListener('click', focus);
     document.addEventListener('keyup', (e) => {
         let cell = document.querySelector('.wrdCell-Unlocked');
         switch (true) {
