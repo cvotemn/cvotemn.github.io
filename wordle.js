@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     //Get Possible Words
     fnReadWords();
+    openKeyBoard();
 
     //Reset Button
     const btnReset = document.querySelector('button.btnReset');
@@ -168,5 +169,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 wordleWords = data.split('\n');
                 wordleWord = wordleWords[Math.floor(Math.random() * wordleWords.length)];
         });
+    }
+
+
+    function openKeyBoard(){
+        document.getElementById("dummyInput").click();
+        setTimeout(function(){
+            document.getElementById("dummyInput").focus()},1)
+        return "keyboard open";
+    
     }
 });
