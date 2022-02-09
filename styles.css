@@ -6,6 +6,7 @@
     border: solid 2px navy;
     flex-wrap: wrap;
     place-content: center;
+    margin-left:110px;
 }
 
 .wrdCell{
@@ -36,14 +37,33 @@
     color: gainsboro !important;
 }
 
-.keyboard, .btnReset{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+.keyboard{
     text-align: center;
-    width: 270px;
-    height: 100%;
+    width: 500px;
+    height: 200%;
     color: black;
-    font-size: 20px;
 }
 
+.key{
+    width: 50px;
+    height: 50px;
+    border: solid 1px black;
+    place-content: center;
+    flex-wrap: wrap;
+    color:black;
+    text-transform: capitalize;
+    font-size: 35px;
+}
+
+.btnReset{
+    width: 200px;
+    height: 50px;
+    border: solid 1px black;
+    place-content: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    color:red;
+    text-transform: capitalize;
+    font-size: 35px;
+    margin-left: 150px;
+}
