@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     //Get Possible Words
     fnReadWords();
-    openKeyBoard();
+    fnCreateKeyboard();
 
     //Reset Button
     const btnReset = document.querySelector('button.btnReset');
@@ -33,42 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // document.querySelectorAll('.wrdCell').forEach(cell => {
     //     cell.trigger('focus');
     // });
-    document.addEventListener('touchstart', (e) => {
-        e.target.focus();
-    });
 
-    document.querySelector(".mblEntry").addEventListener('change', (e) => {
-        e.target.blur();
-       // alert(e.target.value);
-    });
+    //  document.querySelectorAll('.key').forEach(cell => {
+    //      cell.addEventListener('click', fnWrite(cell));
+    // });
 
     document.addEventListener('keyup', (e) => {
-        let cell = document.querySelector('.wrdCell-Unlocked');
-        switch (true) {
-            //was backspace key pressed in the current unlocked row?
-            case e.key === "Backspace" && !wordleLastCell.classList.contains('wrdCell-Checked'):
-                //unlock the previous cell and clear the value
-                wordleLastCell.classList.remove('wrdCell-Locked');
-                wordleLastCell.classList.add('wrdCell-Unlocked');
-                wordleLastCell.innerHTML = '';
-                //reset the wordleLastCell variable
-                wordleLastCell = cell.previousSibling;
-                break;
-
-            //was a letter key pressed in the current unlocked row? 
-            case e.code.substring(0,3) === "Key":
-                //if the cell is not locked, add the letter to the cell
-                fnWrite(e.key, cell);
-                break;
-            
-            //was the enter key pressed in the current unlocked row?
-            case e.key === "Enter" && document.querySelectorAll('.wrdCell-Unlocked').length === 0:
-                //check if the word is correct
-                fnCheckWord();
-                //disable the Start Game button
-                btnReset.disabled = true;
-                break;
-        }
+        fnWrite(e);
     });
 
     //When reset button is pressed, clear the board and Start Game again
@@ -76,21 +47,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
    //FUNCTIONS
     //Write the letter pressed to the next unlocked cell
-    function fnWrite(letter, cell) {
-        if(cell.classList.contains('wrdCell-Unlocked')) {
-            cell.innerHTML = letter;
-            //lock the cell and set it as part of the new word
-            cell.classList.add('wrdCell-Locked', 'wrdCell-New');
-            cell.classList.remove('wrdCell-Unlocked');
-            //set the wordleLastCell variable to the current cell
-            wordleLastCell = cell;
+    function fnWrite(letter) {
+        cell = document.querySelector('.wrdCell-Unlocked');
+
+        switch (true) {
+            //was backspace key pressed in the current unlocked row?
+            case letter.code === "Backspace" && !wordleLastCell.classList.contains('wrdCell-Checked'):
+                //unlock the previous cell and clear the value
+                wordleLastCell.classList.remove('wrdCell-Locked');
+                wordleLastCell.classList.add('wrdCell-Unlocked');
+                wordleLastCell.innerHTML = '';
+                //reset the wordleLastCell variable
+                wordleLastCell = cell.previousSibling;
+                return;
+                break;
+
+            //was a letter key pressed in the current unlocked row? 
+            case letter.code.substring(0,3) === "Key":
+                //if the cell is not locked, add the letter to the cell
+                if(cell.classList.contains('wrdCell-Unlocked')) {
+                    cell.innerHTML = letter.key;
+                    //lock the cell and set it as part of the new word
+                    cell.classList.add('wrdCell-Locked', 'wrdCell-New');
+                    cell.classList.remove('wrdCell-Unlocked');
+                    //set the wordleLastCell variable to the current cell
+                    wordleLastCell = cell;
+                }
+                break;
+            
+            //was the enter key pressed in the current unlocked row?
+            case letter.code === "Enter" && document.querySelectorAll('.wrdCell-Unlocked').length === 0:
+                //check if the word is correct
+                fnCheckWord();
+                //disable the Start Game button
+                btnReset.disabled = true;
+                return;
+                break;
+
+            default:
+                return;
+                break;
         }
+
     }
 
     //Check if the word is correct
     function fnCheckWord() {
         //put the letters from the correct word into an array
-        let wrdLetters = wordleWord.split('');
+        let wrdLetters = wordleWord.toUpperCase().split('');
         //put the letters from the guessed word into an array
         let wordCell = document.querySelectorAll('.wrdCell-New');
         let indx = 0; //index for the guessed word letters
@@ -98,9 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         wordCell.forEach(element => {
             //if the letter in the guessed word matches the letter in the correct word
-            if(wrdLetters.includes(element.innerHTML)) {
+            if(wrdLetters.includes(element.innerHTML.toUpperCase())) {
                 //add the correct letter to the cell
-                if(indx === wrdLetters.indexOf(element.innerHTML)) {
+                if(indx === wrdLetters.indexOf(element.innerHTML.toUpperCase())) {
                     //add the ValidCell class to the cell
                     element.classList.add('wrdValidLetter-ValidCell');
                     intValid ++;
@@ -157,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         //reset the wordleWord variable and the score
-        wordleWord = wordleWords[Math.floor(Math.random() * wordleWords.length)];
+        fnReadWords();
         score = 1000;
 
         //unlock the first row of cells
@@ -176,15 +180,166 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 wordleWords = data.split('\n');
                 wordleWord = wordleWords[Math.floor(Math.random() * wordleWords.length)];
+                wordleWord = wordleWord.toUpperCase();
+                
+                //check for duplicate letters
+                if( new Set(wordleWord.split('')).size !== 5) { 
+                    fnReadWords();
+                }
         });
     }
 
 
-    function openKeyBoard(){
-        document.getElementById("dummyInput").click();
-        setTimeout(function(){
-            document.getElementById("dummyInput").focus()},1)
-        return "keyboard open";
-    
+    function fnCreateKeyboard(){
+
+        const keys = [
+            {
+                key: 'Q',
+                code: 'KeyQ'
+            },
+            {
+                key: 'W',
+                code: 'KeyW'
+            },
+            {
+                key: 'E',
+                code: 'KeyE'
+            },
+            {
+                key: 'R',
+                code: 'KeyR'
+            },
+            {
+                key: 'T',
+                code: 'KeyT'
+            },
+            {
+                key: 'Y',
+                code: 'KeyY'
+            },
+            {
+                key: 'U',
+                code: 'KeyU'
+            },
+            {
+                key: 'I',
+                code: 'KeyI'
+            },
+            {
+                key: 'O',
+                code: 'KeyO'
+            },
+            {
+                key: 'P',
+                code: 'KeyP'
+            },
+            {
+                key: 'A',
+                code: 'KeyA'
+            },
+            {
+                key: 'S',
+                code: 'KeyS'
+            },
+            {
+                key: 'D',
+                code: 'KeyD'
+            },
+            {
+                key: 'F',
+                code: 'KeyF'
+            },
+            {
+                key: 'G',
+                code: 'KeyG'
+            },
+            {
+                key: 'H',
+                code: 'KeyH'
+            },
+            {
+                key: 'J',
+                code: 'KeyJ'
+            },
+            {
+                key: 'K',
+                code: 'KeyK'
+            },
+            {
+                key: 'L',
+                code: 'KeyL'
+            },
+            {
+                key: '⬅️',
+                code: 'Backspace'
+            },
+            {
+                key: 'Z',
+                code: 'KeyZ'
+            },
+            {
+                key: 'X',
+                code: 'KeyX'
+            },
+            {
+                key: 'C',
+                code: 'KeyC'
+            },
+            {
+                key: 'V',
+                code: 'KeyV'
+            },
+            {
+                key: 'B',
+                code: 'KeyB'
+            },
+            {
+                key: 'N',
+                code: 'KeyN'
+            },
+            {
+                key: 'M',
+                code: 'KeyM'
+            },
+            {
+                key: '⏎',
+                code: 'Enter'
+            }
+        ];
+
+        let keyboard = document.querySelector('.keyboard');
+        let keyRow = document.createElement('div');
+        keyRow.classList.add('keyRow');
+
+        keys.forEach(element => {
+            let key = document.createElement('button');
+            key.classList.add('key');
+            key.innerHTML = element.key;
+            key.setAttribute('data-code', element.code);
+            key.setAttribute('data-key', element.key);
+            keyRow.appendChild(key);
+            keyboard.appendChild(keyRow);
+        });
+
+        document.querySelectorAll('.key').forEach(element => {
+            let newRow = document.createElement('div');
+            switch (element.innerHTML) {
+                case 'Q':
+                case 'A':
+                case 'Z':
+                    element.before(newRow);
+                    break;
+            }
+
+             element.addEventListener('click', function(){
+                let k = {
+                    key: element.getAttribute('data-key'),
+                    code: element.getAttribute('data-code')
+                }   
+                fnWrite(k);
+             });
+        });
     }
+
+
 });
